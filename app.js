@@ -7,27 +7,16 @@ const cors = require('cors');
 
 //创建连接池
 var pool=mysql.createPool({
-	host:'127.0.0.1',
-	port:'3306',
-	user:'root',
-	password:'',
-	database: 'eaterytwo', //使用的数据库
+	  host: process.env.MYSQL_HOST,
+	  port: process.env.MYSQL_PORT,
+	  user: process.env.ACCESSKEY,
+	  password: process.env.SECRETKEY,
+	  database: 'app_' + process.env.APPNAME ,//使用的数据库
 	connectionLimit:20  //设置连接池的数量
 });
 // 3.创建express对象
 var server = express();
 //3.1配置允许访问列 脚手架8080//跨域
-server.use(cors({
-    origin:[
-      "http://127.0.0.1:8082",
-      "http://localhost:8082",
-      "http://127.0.0.1:8081",
-      "http://localhost:8081",
-      "http://127.0.0.1:8080",
-      "http://localhost:8080"
-    ],
-    credentials:true
-}));
 
 //3.1.1//引入session模块
 const session = require("express-session");
@@ -132,7 +121,7 @@ server.get("/Userhead", (req, res) => {
       //sql语句执行完毕并且返回解果
       if(result.length==0){
         // insert
-        Uimg="http://127.0.0.1:3000/img/Userhead/xinling.jpg";
+        Uimg="img/Userhead/xinling.jpg";
         var sql = `insert into eaterytwo_Userhead`;
         sql+=` values(null,${uid},'${Uimg}')`;
         pool.query(sql,(err,result)=>{
